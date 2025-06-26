@@ -94,3 +94,5 @@ Desenvolvido com ❤️ em JavaScript puro.
 ---
 
 **Divirta-se jogando xadrez!** 🎯
+
+# Link do jogo https://wesley-hs.github.io/jogo-xadrez/
