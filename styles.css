@@ -1,0 +1,555 @@
+/* Reset e configurações básicas */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Container principal do jogo */
+.game-container {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    padding: 30px;
+    max-width: 1200px;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.game-container.game-over {
+    border: 3px solid #ff6b6b;
+    box-shadow: 0 0 30px rgba(255, 107, 107, 0.3);
+}
+
+/* Cabeçalho do jogo */
+.game-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.game-header h1 {
+    color: #2c3e50;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.game-info {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.turn-indicator, .game-status {
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.turn-indicator {
+    background: #4CAF50;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.game-status {
+    background: #f8f9fa;
+    color: #2c3e50;
+    border: 2px solid #dee2e6;
+}
+
+/* Container do tabuleiro */
+.game-board-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 30px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+/* Wrapper do tabuleiro com coordenadas */
+.chess-board-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.board-coordinates {
+    margin-bottom: 10px;
+}
+
+.files {
+    display: flex;
+    gap: 0;
+    margin-left: 40px;
+}
+
+.files span {
+    width: 60px;
+    text-align: center;
+    font-weight: bold;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.board-with-ranks {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ranks {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: -5px;
+}
+
+.ranks span {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Tabuleiro de xadrez */
+.chess-board {
+    display: grid;
+    grid-template-columns: repeat(8, 60px);
+    grid-template-rows: repeat(8, 60px);
+    border: 3px solid #8b4513;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.square {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    user-select: none;
+}
+
+.square.light {
+    background-color: #f0d9b5;
+}
+
+.square.dark {
+    background-color: #b58863;
+}
+
+.square:hover {
+    transform: scale(1.05);
+    z-index: 1;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.square.piece:hover {
+    background-color: rgba(255, 255, 0, 0.3);
+}
+
+.square.selected {
+    background-color: #ffeb3b !important;
+    box-shadow: inset 0 0 0 3px #ff9800;
+    animation: pulse 1s infinite;
+}
+
+.square.possible-move {
+    background-color: rgba(76, 175, 80, 0.6) !important;
+}
+
+.square.possible-move::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: #4CAF50;
+    border-radius: 50%;
+    opacity: 0.8;
+}
+
+.square.capture-move {
+    background-color: rgba(244, 67, 54, 0.6) !important;
+}
+
+.square.capture-move::after {
+    content: '';
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    border: 3px solid #f44336;
+    border-radius: 50%;
+    box-sizing: border-box;
+}
+
+.square.last-move {
+    background-color: rgba(33, 150, 243, 0.4) !important;
+}
+
+.square.in-check {
+    background-color: rgba(255, 0, 0, 0.7) !important;
+    animation: shake 0.5s infinite;
+}
+
+/* Peças capturadas */
+.captured-pieces {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 20px;
+    min-width: 200px;
+    max-width: 200px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.captured-pieces h3 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.captured-pieces-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: center;
+    min-height: 40px;
+}
+
+.captured-piece {
+    font-size: 1.5rem;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.captured-piece:hover {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+/* Controles do jogo */
+.game-controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.ai-btn.ai-active {
+    background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+.difficulty-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.1);
+    padding: 10px 15px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.difficulty-container label {
+    color: #2c3e50;
+    font-weight: bold;
+}
+
+.difficulty-select {
+    padding: 8px 12px;
+    border: 2px solid #ddd;
+    border-radius: 15px;
+    background: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.difficulty-select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+}
+
+/* Histórico de movimentos */
+.game-history {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.game-history h3 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.move-list {
+    max-height: 200px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.move-item {
+    padding: 8px 12px;
+    background: white;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    border-left: 3px solid #667eea;
+    transition: all 0.3s ease;
+}
+
+.move-item:hover {
+    background: #e3f2fd;
+    transform: translateX(5px);
+}
+
+/* Modal de promoção */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 30px;
+    border-radius: 20px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    animation: modalSlideIn 0.3s ease;
+}
+
+.modal-content h3 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+.promotion-pieces {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.promotion-piece {
+    width: 60px;
+    height: 60px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    background: white;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.promotion-piece:hover {
+    background: #f0f0f0;
+    transform: scale(1.1);
+    border-color: #667eea;
+}
+
+/* Animações */
+@keyframes pulse {
+    0% { box-shadow: inset 0 0 0 3px #ff9800; }
+    50% { box-shadow: inset 0 0 0 6px #ff9800; }
+    100% { box-shadow: inset 0 0 0 3px #ff9800; }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-2px); }
+    75% { transform: translateX(2px); }
+}
+
+@keyframes glow {
+    from { box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4); }
+    to { box-shadow: 0 4px 25px rgba(255, 107, 107, 0.8); }
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .game-container {
+        padding: 20px;
+    }
+    
+    .game-header h1 {
+        font-size: 2rem;
+    }
+    
+    .game-board-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .chess-board {
+        grid-template-columns: repeat(8, 50px);
+        grid-template-rows: repeat(8, 50px);
+    }
+    
+    .square {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+    }
+    
+    .files span, .ranks span {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .captured-pieces {
+        min-width: 150px;
+        max-width: 150px;
+    }
+    
+    .game-controls {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .chess-board {
+        grid-template-columns: repeat(8, 40px);
+        grid-template-rows: repeat(8, 40px);
+    }
+    
+    .square {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+    
+    .files span, .ranks span {
+        width: 40px;
+        height: 40px;
+        font-size: 0.8rem;
+    }
+    
+    .game-info {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .turn-indicator, .game-status {
+        font-size: 1rem;
+        padding: 8px 16px;
+    }
+}
+
+/* Melhorias visuais adicionais */
+.square.piece {
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.chess-board::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background: linear-gradient(45deg, #8b4513, #cd853f);
+    border-radius: 15px;
+    z-index: -1;
+}
+
+/* Efeitos de hover melhorados */
+.btn:hover {
+    background: linear-gradient(45deg, #5a67d8, #6b46c1);
+}
+
+.ai-btn.ai-active:hover {
+    background: linear-gradient(45deg, #e53e3e, #dd6b20);
+}
+
+/* Scrollbar personalizada */
+.move-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.move-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.move-list::-webkit-scrollbar-thumb {
+    background: #667eea;
+    border-radius: 3px;
+}
+
+.move-list::-webkit-scrollbar-thumb:hover {
+    background: #5a67d8;
+}
